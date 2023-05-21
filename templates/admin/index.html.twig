@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+{% block bouton %}
+<a href="#" class="btn btn-primary text-white me-0"><span class="mdi mdi-cart-arrow-right"></span> Effectuer une vente</a>
+{% endblock %}
+{% block breadcrumb %}
+    Tableau de bord
+{% endblock %}
+{%block body%}
+    <div class="card mt-3">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="statistics-details d-flex align-items-center justify-content-between">
+                        <div class="text-center">
+                            <p class="statistics- text-facebook">Nombre de ventes </p>
+                            <h3 class="rate-percentage">60</h3>
+                        </div>
+                        <div class="text-center">
+                            <p class="statistics-title text-danger">Montant en caisse</p>
+                            <h3 class="rate-percentage">7682000</h3>
+                        </div>
+                        <div class="text-center">
+                            <p class="statistics-title text-warning">Produits en rupture</p>
+                            <h3 class="rate-percentage">68.8</h3>
+                        </div>
+
+                        <div class="d-none d-md-block text-center">
+                            <p class="statistics-title text-success">Montant des Appros de cette année</p>
+                            <h3 class="rate-percentage">68.8</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock%}

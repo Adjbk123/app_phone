@@ -1,0 +1,136 @@
+{%extends 'base.html.twig'%}
+
+
+
+{% block body%}
+
+            <form method="post" action="{{ path('app_vente_processvente') }}">
+                <div class="card">
+
+                </div>
+                <!-- Formulaire de saisie client et numéro -->
+                <h3>Informations rélatives au  client :</h3>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label class="form-label" for="client">Client :</label>
+                        <input  class="form-control" type="text" id="client" name="client" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label class="form-label" for="numero">Numéro :</label>
+                        <input class="form-control" type="text" id="numero" name="numero" required>
+                    </div>
+                </div>
+
+                <!-- Tableau des produits disponibles -->
+                <h3>Liste des produits :</h3>
+                <table class="table table-hover" id="table-produits" >
+                    <thead>
+                    <tr>
+                        <th>Produit</th>
+                        <th>Prix</th>
+                        <th>Sélectionner</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for produit in produits %}
+                        <tr>
+                            <td>{{ produit.nomProduit }}</td>
+                            <td>{{ produit.prix }}</td>
+                            <td>
+                                <input type="checkbox" class="produit-checkbox" data-produit-id="{{ produit.id }}">
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+
+                <!-- Tableau des produits sélectionnés -->
+                <h3>Liste des produits sélectionnés :</h3>
+                <table id="table-produits-selectionnes">
+                    <thead>
+                    <tr>
+                        <th>Produit</th>
+                        <th>Prix</th>
+                        <th>Quantité</th>
+                        <th>Coût</th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+
+                <p id="montant_total">Montant total : </p>
+
+                <button type="submit">Valider la vente</button>
+            </form>
+
+
+    <script>
+        // Fonction pour calculer le montant total
+        function calculerMontantTotal() {
+            var couts = document.querySelectorAll('[id^="cout_"]');
+            var montantTotal = 0;
+            for (var i = 0; i < couts.length; i++) {
+                montantTotal += parseFloat(couts[i].textContent);
+            }
+            document.getElementById('montant_total').textContent = 'Montant total : ' + montantTotal.toFixed(2);
+        }
+
+        // Fonction pour mettre à jour le tableau des produits sélectionnés
+        function mettreAJourTableauProduitsSelectionnes() {
+            var tbody = document.querySelector('#table-produits-selectionnes tbody');
+            tbody.innerHTML = '';
+
+            var produitsSelectionnes = document.querySelectorAll('.produit-checkbox:checked');
+            produitsSelectionnes.forEach(function(produitSelectionne) {
+                var produitId = produitSelectionne.getAttribute('data-produit-id');
+                var produit = document.querySelector('#table-produits [data-produit-id="' + produitId + '"]');
+
+                var tr = document.createElement('tr');
+                var tdProduit = document.createElement('td');
+                var tdPrix = document.createElement('td');
+                var tdQuantite = document.createElement('td');
+                var tdCout = document.createElement('td');
+
+                tdProduit.textContent = produit.parentNode.parentNode.querySelector('td:first-child').textContent;
+                tdPrix.textContent = produit.parentNode.parentNode.querySelector('td:nth-child(2)').textContent;
+                tdQuantite.innerHTML = '<input type="number" class="quantite-input" min="0" value="0">';
+                tdCout.setAttribute('id', 'cout_' + produitId);
+
+                tr.appendChild(tdProduit);
+                tr.appendChild(tdPrix);
+                tr.appendChild(tdQuantite);
+                tr.appendChild(tdCout);
+
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Écouter les événements de changement des cases à cocher des produits
+        var produitCheckboxes = document.querySelectorAll('.produit-checkbox');
+        produitCheckboxes.forEach(function(checkbox) {
+            checkbox.addEventListener('change', function() {
+                mettreAJourTableauProduitsSelectionnes();
+                calculerMontantTotal();
+            });
+        });
+
+        // Écouter les événements de changement des quantités des produits sélectionnés (avec événement délégué)
+        var tableauProduitsSelectionnes = document.getElementById('table-produits-selectionnes');
+        tableauProduitsSelectionnes.addEventListener('input', function(event) {
+            if (event.target.classList.contains('quantite-input')) {
+                var quantiteInput = event.target;
+                var produitId = document.querySelector('input.produit-checkbox:checked').getAttribute('data-produit-id');
+                var prix = parseFloat(quantiteInput.parentNode.parentNode.querySelector('td:nth-child(2)').textContent);
+                var quantite = parseInt(quantiteInput.value);
+                var cout = quantite * prix;
+                document.getElementById('cout_' + produitId).textContent = cout.toFixed(2);
+                calculerMontantTotal();
+            }
+        });
+    </script>
+
+
+
+
+
+{% endblock%}

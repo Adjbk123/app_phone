@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Approvisionnement{% endblock %}
+{%block bouton%}
+    <a class="btn btn-primary text-white" href="{{ path('app_approvisionnement_index') }}">Retour</a>
+{% endblock%}
+
+{% block breadcrumb%}
+    Ajouter un nouvel approvisionnement
+{%endblock%}
+
+{% block body %}
+<div class="card mt-3">
+    <div class="card-body">
+        {{ include('approvisionnement/_form.html.twig') }}
+    </div>
+</div>
+{% endblock %}

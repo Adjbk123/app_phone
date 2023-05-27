@@ -61,7 +61,7 @@
                     <tbody id="produitSelectioner" ></tbody>
                 </table>
 
-                <p id="montant_total">Montant total : </p>
+                <p >Montant total :  <span id="montant_total" >0</span> </p>
 
                 <button type="submit" id="envoyer" >Valider la vente</button>
             </form>
@@ -110,6 +110,7 @@
         //sauvegarder les produit sélectionner
         var tabProduitSelect =[]
         var tabStockProduit = []
+        var totale = 0;
     $(".ajouter").on("click", function () {
          var idProduit = $(this).attr("data-produit-id");
          var prixProduit = $(this).attr("data-produit-prix");
@@ -124,10 +125,14 @@
         else{
              if ($(this).is(':checked')) {
 
-
+                  
                 tabProduitSelect.push({
                    id: idProduit,
-                   quantite : 1
+                   quantite : 1,
+                   prix : prixProduit ,
+                   coutProduit : prixProduit ,
+                   stock : stockProduit ,
+                   nomproduit : nomProduit
                 });
                
                     $('#produitSelectioner').append(
@@ -139,12 +144,22 @@
                                 
                         '</tr>'    
             )
+              totale = totale + parseFloat(prixProduit)
+              $("#montant_total").text( totale)
              }
              else{
 
                  $('.produit'+idProduit).remove()
+                for (let index = 0; index <  tabProduitSelect.length; index++) {
+       
+                    if (tabProduitSelect[index].id == idProduit ) {
+                        
+                        totale =  totale - tabProduitSelect[index].coutProduit
+                        $("#montant_total").text( totale)
+                    }
+                    
+                }
                 tabProduitSelect = tabProduitSelect.filter((element) =>{ return element.id != idProduit })
-
          }  
        }
         
@@ -176,11 +191,15 @@
       
       var cout = parseFloat(prix)*parseFloat(quantiter)
       coutspan.text(cout)
-
+             
      for (let index = 0; index <  tabProduitSelect.length; index++) {
        
          if (tabProduitSelect[index].id == idProduit ) {
             tabProduitSelect[index].quantite = quantiter
+            totale = totale - tabProduitSelect[index].coutProduit + cout 
+            tabProduitSelect[index].coutProduit = cout 
+             $("#montant_total").text( totale)
+ 
          }
         
      }

@@ -25,6 +25,7 @@ class VenteController extends AbstractController
 
     {
         $produits =  $produitRepository->findAll();
+       
         return $this->render('vente/vente.html.twig', [
             'produits' =>  $produits,
         ]);
@@ -33,6 +34,13 @@ class VenteController extends AbstractController
     #[Route('/vente/new', name: 'app_vente_processvente')]
     public function processVente(Request $request)
     {
+
+        $venteValider = $request->get('venteValider'); 
+
+        $data = json_decode($venteValider, true);
+      //tableau de vente 
+        dd( $data);
+
         // Récupérer l'utilisateur connecté
         $utilisateur = $this->getUser();
 

@@ -82,7 +82,9 @@
   </div>
   <!-- container-scroller -->
 
-  <!-- plugins:js -->
+  {% block javascript %}
+
+     <!-- plugins:js -->
   <script src="{{ asset('assets/vendors/js/vendor.bundle.base.js') }}"></script>
   <!-- endinject -->
   <!-- Plugin js for this page -->
@@ -103,6 +105,9 @@
   <script src="{{ asset('assets/js/dashboard.js') }}"></script>
   <script src="{{ asset('assets/js/Chart.roundedBarCharts.js') }}"></script>
   <!-- End custom js for this page-->
+    
+  {% endblock %}
+
 </body>
 
 </html>
